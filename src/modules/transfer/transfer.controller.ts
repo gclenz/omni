@@ -7,8 +7,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '../shared/auth.guard';
-import { TransferDto } from './dto/transfer.dto';
-import { UserService } from './user.service';
+import { TransferDto } from '../user/dto/transfer.dto';
+import { UserService } from '../user/user.service';
 
 @Controller('transfer')
 export class TransferController {
