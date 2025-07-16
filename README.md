@@ -6,6 +6,12 @@ Desafio técnico para a Omni Saúde App.
 
 ```bash
 $ pnpm install
+
+$ docker compose up -d
+
+$ cp .env.sample .env
+
+$ pnpm typeorm migration:run
 ```
 
 ## Compile and run the project

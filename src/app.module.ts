@@ -1,9 +1,11 @@
+import { Keyv, createKeyv } from '@keyv/redis';
+import { CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CacheableMemory } from 'cacheable';
 import { DataSource } from 'typeorm';
-
 import { User } from './modules/user/entities/user.entity';
 import { UserModule } from './modules/user/user.module';
 
@@ -32,6 +34,20 @@ import { UserModule } from './modules/user/user.module';
         signOptions: { expiresIn: configService.get('JWT_EXPIRES_IN') },
       }),
       global: true,
+    }),
+    CacheModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return {
+          stores: [
+            new Keyv({
+              store: new CacheableMemory({ ttl: '1s', lruSize: 5000 }),
+            }),
+            createKeyv(configService.get('REDIS_URL')),
+          ],
+        };
+      },
     }),
     UserModule,
   ],

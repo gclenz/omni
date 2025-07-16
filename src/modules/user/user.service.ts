@@ -1,5 +1,7 @@
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -23,6 +25,8 @@ export class UserService {
     private entityManager: EntityManager,
     private jwtService: JwtService,
     private configService: ConfigService,
+    @Inject(CACHE_MANAGER)
+    private cacheManager: Cache,
   ) { }
 
   async create(dto: CreateUserDto): Promise<{ id: string }> {
@@ -80,6 +84,12 @@ export class UserService {
   }
 
   async transfer(dto: TransferDto): Promise<void> {
+    const idempotencyKey = dto.fromId;
+    if (await this.cacheManager.get(idempotencyKey))
+      throw new BadRequestException(
+        'Aguarde um minuto antes de realizar outra transferência',
+      );
+
     if (dto.fromId === dto.toId)
       throw new BadRequestException(
         'Você não pode realizar uma transferência para si mesmo',
@@ -116,6 +126,8 @@ export class UserService {
         } as Partial<User>),
       );
     });
+
+    await this.cacheManager.set(idempotencyKey, true, 60 * 1000);
   }
 
   private async findByUsername({
