@@ -1,8 +1,10 @@
 ## Description
 
-Desafio técnico para a Omni Saúde App.
+Techinical challenge for Omni Saúde App.
 
 ## Project setup
+
+Before running the project, make sure that you have pnpm, Docker, and Docker Compose installed on your machine.
 
 ```bash
 $ pnpm install
@@ -32,11 +34,9 @@ $ pnpm run start:prod
 ```bash
 # unit tests
 $ pnpm run test
-
-# test coverage
-$ pnpm run test:cov
 ```
 
 ## Resources
 
 - [NestJS Documentation](https://docs.nestjs.com)
+- [Testcontainers](https://testcontainers.com)
