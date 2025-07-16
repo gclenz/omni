@@ -37,8 +37,6 @@ $ pnpm run test
 $ pnpm run test:cov
 ```
 
-## Deployment
-
 ## Resources
 
 - [NestJS Documentation](https://docs.nestjs.com)
